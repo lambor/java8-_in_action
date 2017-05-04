@@ -1,7 +1,6 @@
 package ch05;
 
 import ch04.Dish;
-import sun.plugin.javascript.navig.Array;
 
 import java.util.Arrays;
 import java.util.Collection;
