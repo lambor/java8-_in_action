@@ -9,6 +9,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static ch11.Shop.executor;
+import static ch11.Shop.shops;
 
 /**
  * Created by lambor on 17-5-10.
@@ -37,7 +38,18 @@ public class Discount_11_4 {
     }
 
     public static void main(String[] args) {
-        test(Discount_11_4::findPrices,"myPhone27S");
-        test(Discount_11_4::findPrices2,"myPhone27S");
+        test(Discount_11_4::findPrices, "myPhone27S");
+        test(Discount_11_4::findPrices2, "myPhone27S");
+
+        test((product)->{
+            List<CompletableFuture<Double>> futures = shops.stream().map(shop->CompletableFuture.supplyAsync(()->shop.getPriceStr(product),executor))
+                    .map(future->future.thenApply(Quote::parse))
+                    .map(future->future.thenCompose(quote->CompletableFuture.supplyAsync(()->Discount.applyDiscount2(quote),executor)))
+                    .map(future->future.thenCombine(CompletableFuture.supplyAsync(ExchangeService::getRate,executor),(rate,price)->rate*price))
+                    .collect(Collectors.toList());
+
+            return futures.stream().map(CompletableFuture::join).collect(Collectors.toList());
+        },"myPhone27S");
     }
+
 }

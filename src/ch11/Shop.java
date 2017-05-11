@@ -24,7 +24,7 @@ public class Shop {
     });
 
     private String name;
-    private Random random = new Random();
+    private static Random random = new Random();
 
     public Shop(String name) {
         this.name = name;
@@ -47,7 +47,9 @@ public class Shop {
     }
 
     public String getPriceStr(String product) {
-        return name + ":" + getPrice(product) + ":PLATINUM";
+        double price = calculatePrice(product);
+        Discount.Code code = Discount.Code.values()[random.nextInt(Discount.Code.values().length)];
+        return String.format("%s:%.2f:%s",name,price,code);
     }
 
     public static void delay() {
@@ -56,6 +58,21 @@ public class Shop {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static void randomDelay() {
+        int delay = random.nextInt(1000) + 500;
+        try {
+            Thread.sleep(delay);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static Stream<CompletableFuture<String>> findPricesStream(String product) {
+        return shops.stream().map(shop->CompletableFuture.supplyAsync(()->shop.getPriceStr(product),executor))
+                .map(future->future.thenApply(Quote::parse))
+                .map(future->future.thenCompose(quote->CompletableFuture.supplyAsync(()->Discount.applyDiscount(quote),executor)));
     }
 
     private double calculatePrice(String product) {

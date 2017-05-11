@@ -24,6 +24,10 @@ public class Discount {
         return quote.getShopName() + " price is " + apply(quote.getPrice(),quote.getDiscountCode());
     }
 
+    public static double applyDiscount2(Quote quote) {
+        return apply(quote.getPrice(),quote.getDiscountCode());
+    }
+
     private static double apply(double price,Code code) {
         delay();
         return format(price,code);
@@ -32,4 +36,5 @@ public class Discount {
     private static double format(double price,Code code) {
         return price * (100.0-code.percentage)/100.0;
     }
+
 }

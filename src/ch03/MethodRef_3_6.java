@@ -8,7 +8,7 @@ public class MethodRef_3_6 {
 
         String field;
 
-        public String instance_test(String b) {
+        public String instance_test(String b)  {
             return field + b;
         }
 

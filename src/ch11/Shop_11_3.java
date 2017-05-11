@@ -36,6 +36,18 @@ public class Shop_11_3 {
         return priceFutures.stream().map(CompletableFuture::join).collect(Collectors.toList());
     }
 
+
+    //使用CompletableFuture::get代替CompletableFuture::join 出现错误
+    //由于get throws InterruptedException, InterruptedException不是RuntimeException
+//    public static List<String> futureFindPrices2(String product) {
+//        List<CompletableFuture<String>> priceFutures = shops.stream().map(
+//                shop->CompletableFuture.supplyAsync(
+//                        ()-> String.format("%s price is %.2f",shop.getName(),shop.getPrice(product))
+//                )
+//        ).collect(Collectors.toList());
+//        return priceFutures.stream().map(CompletableFuture::get).collect(Collectors.toList());
+//    }
+
     public static void main(String[] args) {
         long start = System.nanoTime();
         System.out.println(findPrices("myPhone27S"));
