@@ -1,5 +1,7 @@
 package ch10;
 
+import scala.Option;
+
 import java.util.Optional;
 
 /**
@@ -31,6 +33,11 @@ public class BetterOptional_10_3_3 {
             return Optional.ofNullable(insurance);
 
         }
+
+        public Option<Insurance> getInsurance2() {
+            return Option.apply(insurance);
+
+        }
     }
 
     public static class Person {
@@ -52,6 +59,10 @@ public class BetterOptional_10_3_3 {
 
         public Optional<Car> getCar() {
             return Optional.ofNullable(car);
+        }
+
+        public Option<Car> getCar2() {
+            return Option.apply(car);
         }
     }
 

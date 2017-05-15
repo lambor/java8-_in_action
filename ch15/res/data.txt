@@ -1,0 +1,3 @@
+hello there
+i am new to scala
+scala is elegent
